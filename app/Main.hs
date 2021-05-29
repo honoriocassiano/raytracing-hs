@@ -11,18 +11,23 @@ convert v = truncateFloatInteger $ v * 255.999
 pixel :: Float -> Float -> [Integer]
 pixel pi pj = [convert pi, convert pj, convert 0.25]
 
+generateLine :: Integer -> Integer -> ((Integer, Integer) -> String)
+generateLine height width =
+    (\(i, j) -> do
+        let pi = (fromIntegral i) / (fromIntegral height-1)
+        let pj = (fromIntegral j) / (fromIntegral width-1)
+        let pix = map (\p -> show p) $ pixel pi pj
+
+        intercalate " " pix
+    )
+
 generateHeader :: Integer -> Integer -> [String]
 generateHeader height width =
     ["P3", (show width) ++ " " ++ (show height), "255"]
 
 generatePixels :: Integer -> Integer -> [String]
-generatePixels height width = map (\(i, j) -> do
-
-    let pi = (fromIntegral i) / (fromIntegral height-1)
-    let pj = (fromIntegral j) / (fromIntegral width-1)
-    let pix = map (\p -> show p) $ pixel pi pj
-
-    intercalate " " pix) [(i, j) | i <- [0..height-1], j <- [0..width-1]]
+generatePixels height width =
+    map (generateLine height width) [(i, j) | i <- [0..height-1], j <- [0..width-1]]
 
 generate :: Integer -> Integer -> [String]
 generate height width = do
