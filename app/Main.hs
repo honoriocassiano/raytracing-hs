@@ -21,5 +21,10 @@ generatePixels height width = mapM_ (\(i, j) -> do
     let (px, py, pz) = pixel pi pj
     putStr $ printf "%d %d %d\n" px py pz) [(i, j) | i <- [0..height-1], j <- [0..width-1]]
 
+generate :: Integer -> Integer -> IO ()
+generate height width = do
+    generateHeader height width
+    generatePixels height width
+
 main :: IO ()
-main = generatePixels 2 2
+main = generate 256 256
