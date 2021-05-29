@@ -1,7 +1,7 @@
 module Main where
 
-import GHC.Float.RealFracMethods
 import Control.Monad
+import GHC.Float.RealFracMethods
 import Text.Printf
 
 convert :: Float -> Integer
