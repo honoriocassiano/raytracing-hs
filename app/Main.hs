@@ -10,8 +10,10 @@ convert v = truncateFloatInteger $ v * 255.999
 pixel :: Float -> Float -> (Integer, Integer, Integer)
 pixel pi pj = (convert pi, convert pj, convert 0.25)
 
-generate :: Integer -> Integer -> IO ()
-generate height width = mapM_ (\(i, j) -> do
+generateHeader :: Integer -> Integer -> IO ()
+generateHeader height width =
+    putStr $ printf "P3\n%d %d\n255\n" width height
+
 generatePixels :: Integer -> Integer -> IO ()
 generatePixels height width = mapM_ (\(i, j) -> do
     let pi = (fromIntegral i) / (fromIntegral height-1)
