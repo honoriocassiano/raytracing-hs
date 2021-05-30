@@ -14,7 +14,7 @@ instance Show Pixel where
 (/~) = (/) `on` fromIntegral
 
 convert :: Float -> Integer
-convert v = truncateFloatInteger $ v * 255.999
+convert v = truncateFloatInteger (v * 255.999)
 
 generatePixel :: Float -> Float -> Pixel
 generatePixel pi pj = Pixel pi pj 0.25
