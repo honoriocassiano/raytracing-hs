@@ -4,6 +4,12 @@ import Data.Function
 import Data.List
 import GHC.Float.RealFracMethods
 
+data Pixel = Pixel Float Float Float
+
+instance Show Pixel where
+    show (Pixel x y z) = (show $ convert x) ++ " " ++ (show $ convert y) ++ " " ++ (show $ convert z)
+
+-- Integer division resulting in a Float
 (/~) :: Integer -> Integer -> Float
 (/~) = (/) `on` fromIntegral
 
