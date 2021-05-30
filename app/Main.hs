@@ -16,17 +16,17 @@ instance Show Pixel where
 convert :: Float -> Integer
 convert v = truncateFloatInteger $ v * 255.999
 
-generatePixel :: Float -> Float -> [Integer]
-generatePixel pi pj = [convert pi, convert pj, convert 0.25]
+generatePixel :: Float -> Float -> Pixel
+generatePixel pi pj = Pixel pi pj 0.25
 
 generateLine :: Integer -> Integer -> ((Integer, Integer) -> String)
 generateLine h w =
     (\(i, j) -> do
-        let pi    = i /~ h-1
-        let pj    = j /~ w-1
-        let pixel = map (\p -> show p) $ generatePixel pi pj
+        let pi    = i /~ (h-1)
+        let pj    = j /~ (w-1)
+        let pixel = generatePixel pi pj
 
-        intercalate " " pixel
+        show pixel
     )
 
 generateHeader :: Integer -> Integer -> [String]
