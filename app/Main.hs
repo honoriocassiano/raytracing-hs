@@ -8,30 +8,30 @@ import Text.Printf
 convert :: Float -> Integer
 convert v = truncateFloatInteger $ v * 255.999
 
-pixel :: Float -> Float -> [Integer]
-pixel pi pj = [convert pi, convert pj, convert 0.25]
+generatePixel :: Float -> Float -> [Integer]
+generatePixel pi pj = [convert pi, convert pj, convert 0.25]
 
 generateLine :: Integer -> Integer -> ((Integer, Integer) -> String)
-generateLine height width =
+generateLine h w =
     (\(i, j) -> do
-        let pi = (fromIntegral i) / (fromIntegral height-1)
-        let pj = (fromIntegral j) / (fromIntegral width-1)
-        let pix = map (\p -> show p) $ pixel pi pj
+        let pi    = (fromIntegral i) / (fromIntegral h-1)
+        let pj    = (fromIntegral j) / (fromIntegral w-1)
+        let pixel = map (\p -> show p) $ generatePixel pi pj
 
-        intercalate " " pix
+        intercalate " " pixel
     )
 
 generateHeader :: Integer -> Integer -> [String]
-generateHeader height width =
-    ["P3", (show width) ++ " " ++ (show height), "255"]
+generateHeader h w = ["P3",
+                      (show w) ++ " " ++ (show h),
+                      "255"]
 
 generatePixels :: Integer -> Integer -> [String]
-generatePixels height width =
-    map (generateLine height width) [(i, j) | i <- [0..height-1], j <- [0..width-1]]
+generatePixels h w = map (generateLine h w) [(i, j) | i <- [0..h-1],
+                                                      j <- [0..w-1]]
 
 generate :: Integer -> Integer -> [String]
-generate height width = do
-    (generateHeader height width) ++ (generatePixels height width)
+generate h w = (generateHeader h w) ++ (generatePixels h w)
 
 main :: IO ()
 main = do
