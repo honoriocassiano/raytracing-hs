@@ -1,9 +1,13 @@
 module Main where
 
 import Control.Monad
+import Data.Function
 import Data.List
 import GHC.Float.RealFracMethods
 import Text.Printf
+
+(/~) :: Integer -> Integer -> Float
+(/~) = (/) `on` fromIntegral
 
 convert :: Float -> Integer
 convert v = truncateFloatInteger $ v * 255.999
@@ -14,8 +18,8 @@ generatePixel pi pj = [convert pi, convert pj, convert 0.25]
 generateLine :: Integer -> Integer -> ((Integer, Integer) -> String)
 generateLine h w =
     (\(i, j) -> do
-        let pi    = (fromIntegral i) / (fromIntegral h-1)
-        let pj    = (fromIntegral j) / (fromIntegral w-1)
+        let pi    = i /~ h-1
+        let pj    = j /~ w-1
         let pixel = map (\p -> show p) $ generatePixel pi pj
 
         intercalate " " pixel
