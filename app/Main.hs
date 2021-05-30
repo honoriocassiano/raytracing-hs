@@ -1,10 +1,8 @@
 module Main where
 
-import Control.Monad
 import Data.Function
 import Data.List
 import GHC.Float.RealFracMethods
-import Text.Printf
 
 (/~) :: Integer -> Integer -> Float
 (/~) = (/) `on` fromIntegral
