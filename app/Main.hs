@@ -37,3 +37,4 @@ main :: IO ()
 main = do
     let content = intercalate "\n" $ generate 256 256
     writeFile "image.ppm" content
+
