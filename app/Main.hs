@@ -22,21 +22,21 @@ convert v = truncateFloatInteger (v * 255.999)
 generatePixel :: Float -> Float -> Pixel
 generatePixel pi pj = Pixel pi pj 0.25
 
-generateLine :: Integer -> Integer -> ((Integer, Integer) -> String)
+generateLine :: Integer -> Integer -> ((Integer, Integer) -> Pixel)
 generateLine h w =
-    (\(i, j) -> show $ generatePixel (i /~ (w-1)) (j /~ (h-1)))
+    (\(i, j) -> generatePixel (i /~ (w-1)) (j /~ (h-1)))
 
 generateHeader :: Integer -> Integer -> [String]
 generateHeader h w = ["P3",
                       (show w) ++ " " ++ (show h),
                       "255"]
 
-generatePixels :: Integer -> Integer -> [String]
+generatePixels :: Integer -> Integer -> [Pixel]
 generatePixels h w = map (generateLine h w) [(i, j) | j <- reverse [0..h-1],
                                                       i <- [0..w-1]]
 
 generate :: Integer -> Integer -> [String]
-generate h w = (generateHeader h w) ++ (generatePixels h w)
+generate h w = (generateHeader h w) ++ map show (generatePixels h w)
 
 main :: IO ()
 main = do
