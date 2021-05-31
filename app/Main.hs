@@ -40,6 +40,6 @@ generate h w = (generateHeader h w) ++ (generatePixels h w)
 
 main :: IO ()
 main = do
-    let content = intercalate "\n" $ generate 256 256
-    writeFile "image.ppm" content
+    -- let content = intercalate "\n" $ generate 256 256
+    writeFile "image.ppm" $ intercalate "\n" $ generate 256 256
 
