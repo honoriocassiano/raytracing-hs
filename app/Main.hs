@@ -25,7 +25,7 @@ pixel w h =
 
 header :: Integer -> Integer -> [String]
 header w h = ["P3",
-              (show w) ++ " " ++ (show h),
+              show w ++ " " ++ show h,
               "255"]
 
 pixels :: Integer -> Integer -> [Pixel]
