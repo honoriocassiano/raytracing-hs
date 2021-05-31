@@ -13,6 +13,8 @@ instance Show Pixel where
 (/~) :: Integer -> Integer -> Float
 (/~) = (/) `on` fromIntegral
 
+infix 7 /~ -- Same precedence of / operator
+
 -- Convert float RGB notation to int RGB notation
 convert :: Float -> Integer
 convert v = truncateFloatInteger (v * 255.999)
