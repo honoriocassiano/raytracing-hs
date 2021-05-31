@@ -20,20 +20,20 @@ convert :: Float -> Integer
 convert v = truncateFloatInteger (v * 255.999)
 
 pixel :: Integer -> Integer -> ((Integer, Integer) -> Pixel)
-pixel h w =
+pixel w h =
     (\(x, y) -> Pixel (x /~ (w-1)) (y /~ (h-1)) 0.25)
 
 header :: Integer -> Integer -> [String]
-header h w = ["P3",
+header w h = ["P3",
               (show w) ++ " " ++ (show h),
               "255"]
 
 pixels :: Integer -> Integer -> [Pixel]
-pixels h w = map (pixel h w) [(x, y) | y <- reverse [0..h-1],
+pixels w h = map (pixel w h) [(x, y) | y <- reverse [0..h-1],
                                        x <- [0..w-1]]
 
 generate :: Integer -> Integer -> [String]
-generate h w = (header h w) ++ map show (pixels h w)
+generate w h = (header w h) ++ map show (pixels w h)
 
 save :: String -> [String] -> IO ()
 save file content = writeFile file (intercalate "\n" content)
