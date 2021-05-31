@@ -22,13 +22,7 @@ generatePixel pi pj = Pixel pi pj 0.25
 
 generateLine :: Integer -> Integer -> ((Integer, Integer) -> String)
 generateLine h w =
-    (\(i, j) -> do
-        let pi    = i /~ (w-1)
-        let pj    = j /~ (h-1)
-        let pixel = generatePixel pi pj
-
-        show pixel
-    )
+    (\(i, j) -> show $ generatePixel (i /~ (w-1)) (j /~ (h-1)))
 
 generateHeader :: Integer -> Integer -> [String]
 generateHeader h w = ["P3",
