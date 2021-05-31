@@ -35,8 +35,9 @@ generatePixels h w = map (generatePixel h w) [(i, j) | j <- reverse [0..h-1],
 generate :: Integer -> Integer -> [String]
 generate h w = (generateHeader h w) ++ map show (generatePixels h w)
 
+save :: String -> [String] -> IO ()
+save file content = writeFile file (intercalate "\n" content)
+
 main :: IO ()
-main = do
-    -- let content = intercalate "\n" $ generate 256 256
-    writeFile "image.ppm" $ intercalate "\n" $ generate 256 256
+main = save "image.ppm" $ generate 256 256
 
