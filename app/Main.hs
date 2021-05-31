@@ -21,7 +21,7 @@ convert v = truncateFloatInteger (v * 255.999)
 
 pixel :: Integer -> Integer -> ((Integer, Integer) -> Pixel)
 pixel h w =
-    (\(i, j) -> Pixel (i /~ (w-1)) (j /~ (h-1)) 0.25)
+    (\(x, y) -> Pixel (x /~ (w-1)) (y /~ (h-1)) 0.25)
 
 header :: Integer -> Integer -> [String]
 header h w = ["P3",
@@ -29,8 +29,8 @@ header h w = ["P3",
               "255"]
 
 pixels :: Integer -> Integer -> [Pixel]
-pixels h w = map (pixel h w) [(i, j) | j <- reverse [0..h-1],
-                                       i <- [0..w-1]]
+pixels h w = map (pixel h w) [(x, y) | y <- reverse [0..h-1],
+                                       x <- [0..w-1]]
 
 generate :: Integer -> Integer -> [String]
 generate h w = (header h w) ++ map show (pixels h w)
