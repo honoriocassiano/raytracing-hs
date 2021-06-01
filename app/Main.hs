@@ -17,7 +17,7 @@ infix 7 /~ -- Same precedence of / operator
 
 -- Convert float RGB notation to int RGB notation
 convert :: Float -> Integer
-convert v = truncateFloatInteger (v * 255.999)
+convert v = truncateFloatInteger $ v * 255.999
 
 pixel :: Integer -> Integer -> ((Integer, Integer) -> Pixel)
 pixel w h =
@@ -36,7 +36,7 @@ generate :: Integer -> Integer -> [String]
 generate w h = (header w h) ++ map show (pixels w h)
 
 save :: String -> [String] -> IO ()
-save file content = writeFile file (intercalate "\n" content)
+save file content = writeFile file $ intercalate "\n" content
 
 main :: IO ()
 main = save "image.ppm" $ generate 256 256
