@@ -32,12 +32,14 @@ pixels :: Integer -> Integer -> [Pixel]
 pixels w h = map (pixel w h) [(x, y) | y <- reverse [0..h-1],
                                        x <- [0..w-1]]
 
-generate :: Integer -> Integer -> [String]
-generate w h = (header w h) ++ map show (pixels w h)
-
-save :: String -> [String] -> IO ()
-save file content = writeFile file $ intercalate "\n" content
+save :: String -> [String] -> [Pixel] -> IO ()
+save file header content =
+    writeFile file $ intercalate "\n" $ header ++ (map show content)
 
 main :: IO ()
-main = save "image.ppm" $ generate 256 256
+main = do
+    let (w, h) = (256, 256)
+    let head = header w h
+    let content = pixels w h
+    save "image.ppm" head content
 
