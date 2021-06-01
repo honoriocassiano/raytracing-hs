@@ -39,7 +39,10 @@ save file header content =
 main :: IO ()
 main = do
     let (w, h) = (256, 256)
+    let filename = "image.ppm"
+
     let head = header w h
     let content = pixels w h
-    save "image.ppm" head content
+
+    save filename head content
 
