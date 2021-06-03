@@ -3,46 +3,55 @@ module Main where
 import Data.Function
 import Data.List
 import GHC.Float.RealFracMethods
+import System.IO
+import Text.Printf
+
+width = 256
+height = 256
+filename = "images/image.ppm"
 
 data Pixel = Pixel Float Float Float
 
 instance Show Pixel where
-    show (Pixel x y z) = intercalate " " (map (show . convert) [x, y, z])
+    show (Pixel x y z) = intercalate " " $ map (show . convert) [x, y, z]
 
 -- Integer division resulting in a Float
 (/~) :: Integer -> Integer -> Float
 (/~) = (/) `on` fromIntegral
 
+infix 7 /~ -- Same precedence of / operator
+
+-- Convert float RGB notation to int RGB notation
 convert :: Float -> Integer
-convert v = truncateFloatInteger (v * 255.999)
+convert v = truncateFloatInteger $ v * 255.999
 
-generatePixel :: Float -> Float -> Pixel
-generatePixel pi pj = Pixel pi pj 0.25
+pixel :: Integer -> Integer -> ((Integer, Integer) -> Pixel)
+pixel w h =
+    (\(x, y) -> Pixel (x /~ (w-1)) (y /~ (h-1)) 0.25)
 
-generateLine :: Integer -> Integer -> ((Integer, Integer) -> String)
-generateLine h w =
-    (\(i, j) -> do
-        let pi    = i /~ (w-1)
-        let pj    = j /~ (h-1)
-        let pixel = generatePixel pi pj
+header :: Integer -> Integer -> String
+header w h = printf "P3\n%d %d\n255" w h
 
-        show pixel
-    )
+scanlines' :: Integer -> Integer -> Integer -> IO [Pixel]
+scanlines' 0 _ _ = return []
+scanlines' _ 0 _ = return []
+scanlines' w h line
+    | line < 0  = return []
+    | line >= h = return []
+    | otherwise = do
+        putStr $ printf "\rRemaining lines: %d " line
+        hFlush stdout
+        return $ map (pixel w h) [(x, line) | x <- [0..w-1]]
 
-generateHeader :: Integer -> Integer -> [String]
-generateHeader h w = ["P3",
-                      (show w) ++ " " ++ (show h),
-                      "255"]
-
-generatePixels :: Integer -> Integer -> [String]
-generatePixels h w = map (generateLine h w) [(i, j) | j <- reverse [0..h-1],
-                                                      i <- [0..w-1]]
-
-generate :: Integer -> Integer -> [String]
-generate h w = (generateHeader h w) ++ (generatePixels h w)
+scanlines :: Integer -> Integer -> IO [[Pixel]]
+scanlines w h = mapM (scanlines' w h) $ reverse [0..h-1]
 
 main :: IO ()
 main = do
-    let content = intercalate "\n" $ generate 256 256
-    writeFile "image.ppm" content
+    content <- scanlines width height
+    handle  <- openFile filename WriteMode
+    hPutStrLn handle $ header width height
+    hPutStrLn handle $ intercalate "\n" $ map show $ concat content
+    hClose handle
+    putStrLn "\nDone."
 
