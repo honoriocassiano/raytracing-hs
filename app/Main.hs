@@ -8,7 +8,7 @@ import Text.Printf
 
 width = 256
 height = 256
-filename = "image.ppm"
+filename = "images/image.ppm"
 
 data Pixel = Pixel Float Float Float
 
