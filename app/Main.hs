@@ -3,6 +3,7 @@ module Main where
 import Data.Function
 import Data.List
 import GHC.Float.RealFracMethods
+import System.IO
 
 data Pixel = Pixel Float Float Float
 
@@ -28,13 +29,16 @@ header w h = ["P3",
               show w ++ " " ++ show h,
               "255"]
 
-pixels :: Integer -> Integer -> [Pixel]
-pixels w h = map (pixel w h) [(x, y) | y <- reverse [0..h-1],
-                                       x <- [0..w-1]]
+scanlines' :: Integer -> Integer -> Integer -> IO [Pixel]
+-- TODO Add guard if w, h or l <= 0
+scanlines' w h line = do
+    putStr $ "\rRemaining lines: " ++ (show line) ++ " "
+    hFlush stdout
+    return $ map (pixel w h) [(x, line) | x <- [0..w-1]]
 
-save :: String -> [String] -> [Pixel] -> IO ()
-save file header content =
-    writeFile file $ intercalate "\n" $ header ++ (map show content)
+scanlines :: Integer -> Integer -> IO [[Pixel]]
+scanlines w h = do
+     mapM (scanlines' w h) $ reverse[0..h-1]
 
 main :: IO ()
 main = do
@@ -42,7 +46,8 @@ main = do
     let filename = "image.ppm"
 
     let head = header w h
-    let content = pixels w h
 
-    save filename head content
+    content <- scanlines w h
+    writeFile filename $ intercalate "\n" $ head ++ (map show $ concat content)
+    putStrLn "\nDone"
 
