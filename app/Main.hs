@@ -33,11 +33,15 @@ header :: Integer -> Integer -> [String]
 header w h = ["P3", printf "%d %d" w h, "255"]
 
 scanlines' :: Integer -> Integer -> Integer -> IO [Pixel]
--- TODO Add guard if w, h or l <= 0
-scanlines' w h line = do
-    putStr $ printf "\rRemaining lines: %d " line
-    hFlush stdout
-    return $ map (pixel w h) [(x, line) | x <- [0..w-1]]
+scanlines' 0 _ _ = return []
+scanlines' _ 0 _ = return []
+scanlines' w h line
+    | line < 0  = return []
+    | line >= h = return []
+    | otherwise = do
+        putStr $ printf "\rRemaining lines: %d " line
+        hFlush stdout
+        return $ map (pixel w h) [(x, line) | x <- [0..w-1]]
 
 scanlines :: Integer -> Integer -> IO [[Pixel]]
 scanlines w h = mapM (scanlines' w h) $ reverse [0..h-1]
