@@ -4,6 +4,7 @@ import Data.Function
 import Data.List
 import GHC.Float.RealFracMethods
 import System.IO
+import Text.Printf
 
 width = 256
 height = 256
@@ -29,12 +30,12 @@ pixel w h =
     (\(x, y) -> Pixel (x /~ (w-1)) (y /~ (h-1)) 0.25)
 
 header :: Integer -> Integer -> [String]
-header w h = ["P3", show w ++ " " ++ show h, "255"]
+header w h = ["P3", printf "%d %d" w h, "255"]
 
 scanlines' :: Integer -> Integer -> Integer -> IO [Pixel]
 -- TODO Add guard if w, h or l <= 0
 scanlines' w h line = do
-    putStr $ "\rRemaining lines: " ++ (show line) ++ " "
+    putStr $ printf "\rRemaining lines: %d " line
     hFlush stdout
     return $ map (pixel w h) [(x, line) | x <- [0..w-1]]
 
