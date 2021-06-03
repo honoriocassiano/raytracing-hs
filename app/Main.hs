@@ -53,5 +53,5 @@ main = do
     hPutStrLn handle $ header width height
     hPutStrLn handle $ intercalate "\n" $ map show $ concat content
     hClose handle
-    putStrLn "\nDone"
+    putStrLn "\nDone."
 
