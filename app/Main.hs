@@ -32,6 +32,11 @@ pixel w h =
 header :: Integer -> Integer -> String
 header w h = printf "P3\n%d %d\n255" w h
 
+printRemaining :: Integer -> IO ()
+printRemaining rem = do
+    putStr $ printf "\rRemaining lines: %d " rem
+    hFlush stdout
+
 scanlines' :: Integer -> Integer -> Integer -> IO [Pixel]
 scanlines' 0 _ _ = return []
 scanlines' _ 0 _ = return []
@@ -39,8 +44,7 @@ scanlines' w h line
     | line < 0  = return []
     | line >= h = return []
     | otherwise = do
-        putStr $ printf "\rRemaining lines: %d " line
-        hFlush stdout
+        printRemaining(line)
         return $ map (pixel w h) [(x, line) | x <- [0..w-1]]
 
 scanlines :: Integer -> Integer -> IO [[Pixel]]
